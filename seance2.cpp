@@ -17,6 +17,16 @@ void dfs(int noeud, int couleur, std::map<int, std::set<int>>& graphe, std::map<
     }
 }
 
+std::string intToLabel(int index) {
+    std::string label;
+    while (index >= 0) {
+        label = char('A' + index % 26) + label;
+        index = index / 26 - 1;
+    }
+    return label;
+}
+
+
 int main() {
     std::vector<Arete> tableau = {
         {1, 2, 1}, {2, 3, 1}, {4, 5, 1},
@@ -24,13 +34,20 @@ int main() {
         {10, 10, 1}
     };
 
+
     std::map<int, std::set<int>> graphe;
     for (const auto& ar : tableau) {
         graphe[ar.x].insert(ar.y);
         graphe[ar.y].insert(ar.x);
     }
 
+    std::map<int, std::string> idToName;
+    int i = 0;
+    for (const auto& pair : graphe) {
+        idToName[pair.first] = intToLabel(i++);
+    }
 
+    
     std::map<int, int> couleurs;
     int couleur = 1;
     for (const auto& pair : graphe) {
@@ -43,9 +60,9 @@ int main() {
 
     std::cout << "Composantes connexes colorées :\n";
     for (const auto& pair : couleurs) {
-        int noeud = pair.first;
+        std::string nomNoeud = idToName[pair.first];
         int col = pair.second;
-        std::cout << "Noeud " << noeud << " → Couleur " << col << "\n";
+        std::cout << "Noeud " << nomNoeud << " → Couleur " << col << "\n";
     }
 
     return 0;
